@@ -34,7 +34,10 @@ func (s *RoomService) CreateRoom(ctx context.Context) (resp *room.CreateRoomResp
 			roomId = generateRandomString(6)
 		}
 	}
-
+	err = s.Repo.CreateRoom(roomId)
+	if err != nil {
+		return nil, err
+	}
 	clientId, err := uuid.NewUUID()
 	if err != nil {
 		return nil, err
@@ -77,46 +80,26 @@ func (s *RoomService) JoinRoom(ctx context.Context, req *room.JoinRoomReq) (resp
 		}, nil
 	}
 
-	var clientIdStr string
-	var clientToken string
-	if req.ClientToken != nil {
-		clientToken = *req.ClientToken
-		rpcResp, err := s.AuthClient.GetClientId(ctx, &auth.GetClientIdReq{
-			Token: clientToken,
-		})
-		if err != nil {
-			return nil, err
-		}
-		if rpcResp.BaseResp.Code != 0 {
-			return &room.JoinRoomResp{BaseResp: &base.BaseResp{
-				Code:    rpcResp.BaseResp.Code,
-				Message: rpcResp.BaseResp.Message,
-			}}, nil
-		}
-		clientIdStr = *rpcResp.ClientId
-
-	} else {
-		// 生成用户的 Client ID
-		clientId, err := uuid.NewUUID()
-		if err != nil {
-			return nil, err
-		}
-		clientIdStr = clientId.String()
-		// 获取用户的 Token
-		rpcResp, err := s.AuthClient.GetClientToken(ctx, &auth.GetClientTokenReq{
-			ClientId: clientIdStr,
-		})
-		if err != nil {
-			return nil, err
-		}
-		if rpcResp.BaseResp.Code != 0 {
-			return &room.JoinRoomResp{BaseResp: &base.BaseResp{
-				Code:    rpcResp.BaseResp.Code,
-				Message: rpcResp.BaseResp.Message,
-			}}, nil
-		}
-		clientToken = *rpcResp.Token
+	// 生成用户的 Client ID
+	clientId, err := uuid.NewUUID()
+	if err != nil {
+		return nil, err
 	}
+	clientIdStr := clientId.String()
+	// 获取用户的 Token
+	rpcResp, err := s.AuthClient.GetClientToken(ctx, &auth.GetClientTokenReq{
+		ClientId: clientIdStr,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if rpcResp.BaseResp.Code != 0 {
+		return &room.JoinRoomResp{BaseResp: &base.BaseResp{
+			Code:    rpcResp.BaseResp.Code,
+			Message: rpcResp.BaseResp.Message,
+		}}, nil
+	}
+	clientToken := *rpcResp.Token
 
 	// 将用户加入房间
 	err = s.Repo.JoinRoom(req.RoomId, clientIdStr)

@@ -416,8 +416,7 @@ func (p *CreateRoomResp) Field4DeepEqual(src *string) bool {
 }
 
 type JoinRoomReq struct {
-	RoomId      string  `thrift:"roomId,1,required" frugal:"1,required,string" json:"roomId"`
-	ClientToken *string `thrift:"clientToken,2,optional" frugal:"2,optional,string" json:"clientToken,omitempty"`
+	RoomId string `thrift:"roomId,1,required" frugal:"1,required,string" json:"roomId"`
 }
 
 func NewJoinRoomReq() *JoinRoomReq {
@@ -431,29 +430,12 @@ func (p *JoinRoomReq) InitDefault() {
 func (p *JoinRoomReq) GetRoomId() (v string) {
 	return p.RoomId
 }
-
-var JoinRoomReq_ClientToken_DEFAULT string
-
-func (p *JoinRoomReq) GetClientToken() (v string) {
-	if !p.IsSetClientToken() {
-		return JoinRoomReq_ClientToken_DEFAULT
-	}
-	return *p.ClientToken
-}
 func (p *JoinRoomReq) SetRoomId(val string) {
 	p.RoomId = val
-}
-func (p *JoinRoomReq) SetClientToken(val *string) {
-	p.ClientToken = val
 }
 
 var fieldIDToName_JoinRoomReq = map[int16]string{
 	1: "roomId",
-	2: "clientToken",
-}
-
-func (p *JoinRoomReq) IsSetClientToken() bool {
-	return p.ClientToken != nil
 }
 
 func (p *JoinRoomReq) Read(iprot thrift.TProtocol) (err error) {
@@ -482,16 +464,6 @@ func (p *JoinRoomReq) Read(iprot thrift.TProtocol) (err error) {
 					goto ReadFieldError
 				}
 				issetRoomId = true
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 2:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
 			} else {
 				if err = iprot.Skip(fieldTypeId); err != nil {
 					goto SkipFieldError
@@ -542,15 +514,6 @@ func (p *JoinRoomReq) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *JoinRoomReq) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.ClientToken = &v
-	}
-	return nil
-}
-
 func (p *JoinRoomReq) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("JoinRoomReq"); err != nil {
@@ -559,10 +522,6 @@ func (p *JoinRoomReq) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
-			goto WriteFieldError
-		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
 			goto WriteFieldError
 		}
 
@@ -601,25 +560,6 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *JoinRoomReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if p.IsSetClientToken() {
-		if err = oprot.WriteFieldBegin("clientToken", thrift.STRING, 2); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.ClientToken); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
 func (p *JoinRoomReq) String() string {
 	if p == nil {
 		return "<nil>"
@@ -636,27 +576,12 @@ func (p *JoinRoomReq) DeepEqual(ano *JoinRoomReq) bool {
 	if !p.Field1DeepEqual(ano.RoomId) {
 		return false
 	}
-	if !p.Field2DeepEqual(ano.ClientToken) {
-		return false
-	}
 	return true
 }
 
 func (p *JoinRoomReq) Field1DeepEqual(src string) bool {
 
 	if strings.Compare(p.RoomId, src) != 0 {
-		return false
-	}
-	return true
-}
-func (p *JoinRoomReq) Field2DeepEqual(src *string) bool {
-
-	if p.ClientToken == src {
-		return true
-	} else if p.ClientToken == nil || src == nil {
-		return false
-	}
-	if strings.Compare(*p.ClientToken, *src) != 0 {
 		return false
 	}
 	return true

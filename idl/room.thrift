@@ -10,7 +10,6 @@ struct CreateRoomResp{
 
 struct JoinRoomReq{
     1: required string roomId
-    2: optional string clientToken
 }
 struct JoinRoomResp{
     1: required base.BaseResp baseResp

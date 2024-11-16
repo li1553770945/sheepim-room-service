@@ -29,7 +29,6 @@ type RpcConfig struct {
 }
 
 type CacheConfig struct {
-	Username      string `yaml:"username"`
 	Password      string `yaml:"password"`
 	Database      int    `yaml:"database"`
 	Address       string `yaml:"address"`

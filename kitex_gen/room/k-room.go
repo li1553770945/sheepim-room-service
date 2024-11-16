@@ -352,20 +352,6 @@ func (p *JoinRoomReq) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
-		case 2:
-			if fieldTypeId == thrift.STRING {
-				l, err = p.FastReadField2(buf[offset:])
-				offset += l
-				if err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
-				offset += l
-				if err != nil {
-					goto SkipFieldError
-				}
-			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -421,19 +407,6 @@ func (p *JoinRoomReq) FastReadField1(buf []byte) (int, error) {
 	return offset, nil
 }
 
-func (p *JoinRoomReq) FastReadField2(buf []byte) (int, error) {
-	offset := 0
-
-	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
-		return offset, err
-	} else {
-		offset += l
-		p.ClientToken = &v
-
-	}
-	return offset, nil
-}
-
 // for compatibility
 func (p *JoinRoomReq) FastWrite(buf []byte) int {
 	return 0
@@ -444,7 +417,6 @@ func (p *JoinRoomReq) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWri
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "JoinRoomReq")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
-		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -456,7 +428,6 @@ func (p *JoinRoomReq) BLength() int {
 	l += bthrift.Binary.StructBeginLength("JoinRoomReq")
 	if p != nil {
 		l += p.field1Length()
-		l += p.field2Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -472,34 +443,12 @@ func (p *JoinRoomReq) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWri
 	return offset
 }
 
-func (p *JoinRoomReq) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
-	offset := 0
-	if p.IsSetClientToken() {
-		offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "clientToken", thrift.STRING, 2)
-		offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, *p.ClientToken)
-
-		offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
-	}
-	return offset
-}
-
 func (p *JoinRoomReq) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("roomId", thrift.STRING, 1)
 	l += bthrift.Binary.StringLengthNocopy(p.RoomId)
 
 	l += bthrift.Binary.FieldEndLength()
-	return l
-}
-
-func (p *JoinRoomReq) field2Length() int {
-	l := 0
-	if p.IsSetClientToken() {
-		l += bthrift.Binary.FieldBeginLength("clientToken", thrift.STRING, 2)
-		l += bthrift.Binary.StringLengthNocopy(*p.ClientToken)
-
-		l += bthrift.Binary.FieldEndLength()
-	}
 	return l
 }
 
