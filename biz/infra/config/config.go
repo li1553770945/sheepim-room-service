@@ -31,8 +31,7 @@ type RpcConfig struct {
 type CacheConfig struct {
 	Password      string `yaml:"password"`
 	Database      int    `yaml:"database"`
-	Address       string `yaml:"address"`
-	Port          int32  `yaml:"port"`
+	Endpoint      string `yaml:"endpoint"`
 	ExpireSeconds int64  `yaml:"expire-seconds"`
 }
 

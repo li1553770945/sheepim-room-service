@@ -2,7 +2,6 @@ package cache
 
 import (
 	"context"
-	"fmt"
 	"github.com/li1553770945/sheepim-room-service/biz/infra/config"
 	"github.com/redis/go-redis/v9"
 )
@@ -12,7 +11,7 @@ func NewCache(conf *config.Config) *redis.Client {
 
 	// 构造 Redis 配置
 	options := &redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", cacheConfig.Address, cacheConfig.Port),
+		Addr:     cacheConfig.Endpoint,
 		Password: cacheConfig.Password, // 密码（如果无密码则留空）
 		DB:       cacheConfig.Database, // 数据库编号（默认 0）
 	}
