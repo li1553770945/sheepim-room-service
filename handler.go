@@ -22,3 +22,10 @@ func (s *RoomServiceImpl) JoinRoom(ctx context.Context, req *room.JoinRoomReq) (
 	resp, err = App.RoomService.JoinRoom(ctx, req)
 	return
 }
+
+// GetRoomMembers implements the RoomServiceImpl interface.
+func (s *RoomServiceImpl) GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq) (resp *room.GetRoomMembersResp, err error) {
+	App := container.GetGlobalContainer()
+	resp, err = App.RoomService.GetRoomMembers(ctx, req)
+	return
+}

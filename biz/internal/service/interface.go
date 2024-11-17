@@ -15,6 +15,7 @@ type RoomService struct {
 type IRoomService interface {
 	CreateRoom(ctx context.Context) (resp *room.CreateRoomResp, err error)
 	JoinRoom(ctx context.Context, req *room.JoinRoomReq) (resp *room.JoinRoomResp, err error)
+	GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq) (resp *room.GetRoomMembersResp, err error)
 }
 
 func NewRoomService(repo repo.IRepository, authClient authservice.Client) IRoomService {

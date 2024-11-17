@@ -16,7 +16,16 @@ struct JoinRoomResp{
     2: optional string ClientId
     3: optional string clientToken
 }
+
+struct GetRoomMembersReq{
+    1: required string roomId
+}
+struct GetRoomMembersResp{
+    1: required base.BaseResp baseResp
+    2: optional list<string> members
+}
 service RoomService {
     CreateRoomResp CreateRoom()
     JoinRoomResp JoinRoom(JoinRoomReq req)
+    GetRoomMembersResp GetRoomMembers(GetRoomMembersReq req)
 }

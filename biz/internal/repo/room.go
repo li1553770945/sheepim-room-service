@@ -2,10 +2,11 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"time"
 )
 
-func (r Repository) CreateRoom(roomId string) error {
+func (r *Repository) CreateRoom(roomId string) error {
 	roomKey := "room:" + roomId + ":users"
 
 	// 使用 SAdd 确保房间存在
@@ -21,7 +22,7 @@ func (r Repository) CreateRoom(roomId string) error {
 	r.Cache.Expire(ctx, roomKey, time.Duration(r.CacheExpireSeconds)*time.Second) // 24 小时
 	return nil
 }
-func (r Repository) IsRoomExist(roomId string) (exist bool, err error) {
+func (r *Repository) IsRoomExist(roomId string) (exist bool, err error) {
 	roomKey := "room:" + roomId + ":users"
 
 	ctx := context.Background()
@@ -34,7 +35,7 @@ func (r Repository) IsRoomExist(roomId string) (exist bool, err error) {
 	return exists != 0, nil
 }
 
-func (r Repository) JoinRoom(roomId, clientId string) error {
+func (r *Repository) JoinRoom(roomId, clientId string) error {
 	// Redis Key 格式
 	roomKey := "room:" + roomId + ":users"
 
@@ -47,13 +48,24 @@ func (r Repository) JoinRoom(roomId, clientId string) error {
 	}
 	if exists == 0 {
 		// 房间不存在，创建房间
-		err := r.CreateRoom(roomId)
-		if err != nil {
-			return err
-		}
+		return errors.New("不存在的房间")
 	}
 
 	// 将用户 ID 添加到房间的在线用户列表
 	_, err = r.Cache.SAdd(ctx, roomKey, clientId).Result()
 	return err
+}
+
+func (r *Repository) GetRoomMembers(roomId string) ([]string, error) {
+	roomKey := "room:" + roomId + ":users"
+
+	ctx := context.Background()
+
+	// 获取房间成员列表
+	members, err := r.Cache.SMembers(ctx, roomKey).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	return members, nil
 }

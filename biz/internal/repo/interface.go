@@ -9,6 +9,7 @@ type IRepository interface {
 	CreateRoom(roomId string) error
 	IsRoomExist(roomId string) (bool, error)
 	JoinRoom(roomId, userId string) error
+	GetRoomMembers(roomId string) ([]string, error)
 }
 
 type Repository struct {

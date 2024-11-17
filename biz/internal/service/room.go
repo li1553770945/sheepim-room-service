@@ -116,3 +116,29 @@ func (s *RoomService) JoinRoom(ctx context.Context, req *room.JoinRoomReq) (resp
 		ClientToken: &clientToken,
 	}, nil
 }
+
+func (s *RoomService) GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq) (resp *room.GetRoomMembersResp, err error) {
+	exist, err := s.Repo.IsRoomExist(req.RoomId)
+	if err != nil {
+		return nil, err
+	}
+	if !exist {
+		return &room.GetRoomMembersResp{
+			BaseResp: &base.BaseResp{
+				Code:    constant.NotFound,
+				Message: "房间不存在",
+			},
+		}, nil
+	}
+	members, err := s.Repo.GetRoomMembers(req.RoomId)
+	if err != nil {
+		return nil, err
+	}
+	resp = &room.GetRoomMembersResp{
+		BaseResp: &base.BaseResp{
+			Code: constant.Success,
+		},
+		Members: members,
+	}
+	return resp, nil
+}

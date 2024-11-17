@@ -19,8 +19,9 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "RoomService"
 	handlerType := (*room.RoomService)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"CreateRoom": kitex.NewMethodInfo(createRoomHandler, newRoomServiceCreateRoomArgs, newRoomServiceCreateRoomResult, false),
-		"JoinRoom":   kitex.NewMethodInfo(joinRoomHandler, newRoomServiceJoinRoomArgs, newRoomServiceJoinRoomResult, false),
+		"CreateRoom":     kitex.NewMethodInfo(createRoomHandler, newRoomServiceCreateRoomArgs, newRoomServiceCreateRoomResult, false),
+		"JoinRoom":       kitex.NewMethodInfo(joinRoomHandler, newRoomServiceJoinRoomArgs, newRoomServiceJoinRoomResult, false),
+		"GetRoomMembers": kitex.NewMethodInfo(getRoomMembersHandler, newRoomServiceGetRoomMembersArgs, newRoomServiceGetRoomMembersResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "room",
@@ -73,6 +74,24 @@ func newRoomServiceJoinRoomResult() interface{} {
 	return room.NewRoomServiceJoinRoomResult()
 }
 
+func getRoomMembersHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*room.RoomServiceGetRoomMembersArgs)
+	realResult := result.(*room.RoomServiceGetRoomMembersResult)
+	success, err := handler.(room.RoomService).GetRoomMembers(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newRoomServiceGetRoomMembersArgs() interface{} {
+	return room.NewRoomServiceGetRoomMembersArgs()
+}
+
+func newRoomServiceGetRoomMembersResult() interface{} {
+	return room.NewRoomServiceGetRoomMembersResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -97,6 +116,16 @@ func (p *kClient) JoinRoom(ctx context.Context, req *room.JoinRoomReq) (r *room.
 	_args.Req = req
 	var _result room.RoomServiceJoinRoomResult
 	if err = p.c.Call(ctx, "JoinRoom", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq) (r *room.GetRoomMembersResp, err error) {
+	var _args room.RoomServiceGetRoomMembersArgs
+	_args.Req = req
+	var _result room.RoomServiceGetRoomMembersResult
+	if err = p.c.Call(ctx, "GetRoomMembers", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
