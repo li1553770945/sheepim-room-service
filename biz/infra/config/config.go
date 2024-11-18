@@ -22,10 +22,7 @@ type EtcdConfig struct {
 }
 
 type RpcConfig struct {
-	UserServiceName     string `yaml:"user-service-name"`
-	AuthServiceName     string `yaml:"auth-service-name"`
-	ProjectServiceName  string `yaml:"project-service-name"`
-	FeedbackServiceName string `yaml:"feedback-service-name"`
+	AuthServiceName string `yaml:"auth-service-name"`
 }
 
 type CacheConfig struct {
