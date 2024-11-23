@@ -55,6 +55,10 @@ func (s *RoomService) CreateRoom(ctx context.Context) (resp *room.CreateRoomResp
 			Message: rpcResp.BaseResp.Message,
 		}}, nil
 	}
+	err = s.Repo.JoinRoom(roomId, clientIdStr)
+	if err != nil {
+		return nil, err
+	}
 	return &room.CreateRoomResp{
 		BaseResp: &base.BaseResp{
 			Code: constant.Success,
