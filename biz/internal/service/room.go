@@ -34,10 +34,7 @@ func (s *RoomService) CreateRoom(ctx context.Context) (resp *room.CreateRoomResp
 			roomId = generateRandomString(6)
 		}
 	}
-	err = s.Repo.CreateRoom(roomId)
-	if err != nil {
-		return nil, err
-	}
+
 	clientId, err := uuid.NewUUID()
 	if err != nil {
 		return nil, err
@@ -55,7 +52,7 @@ func (s *RoomService) CreateRoom(ctx context.Context) (resp *room.CreateRoomResp
 			Message: rpcResp.BaseResp.Message,
 		}}, nil
 	}
-	err = s.Repo.JoinRoom(roomId, clientIdStr)
+	err = s.Repo.CreateRoom(roomId, clientIdStr)
 	if err != nil {
 		return nil, err
 	}

@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-func (r *Repository) CreateRoom(roomId string) error {
+func (r *Repository) CreateRoom(roomId string, initClientId string) error {
 	roomKey := "room:" + roomId + ":users"
 
 	// 使用 SAdd 确保房间存在
 	// SAdd 不会重复添加成员，所以即使房间已存在也不会报错
 	ctx := context.Background()
-	_, err := r.Cache.SAdd(ctx, roomKey, "").Result()
+	_, err := r.Cache.SAdd(ctx, roomKey, initClientId).Result()
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 type IRepository interface {
-	CreateRoom(roomId string) error
+	CreateRoom(roomId string, initClientId string) error
 	IsRoomExist(roomId string) (bool, error)
 	JoinRoom(roomId, userId string) error
 	GetRoomMembers(roomId string) ([]string, error)
