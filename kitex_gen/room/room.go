@@ -1366,12 +1366,507 @@ func (p *GetRoomMembersResp) Field2DeepEqual(src []string) bool {
 	return true
 }
 
+type CheckIsInRoomReq struct {
+	RoomId   string `thrift:"roomId,1,required" frugal:"1,required,string" json:"roomId"`
+	ClientId string `thrift:"clientId,2,required" frugal:"2,required,string" json:"clientId"`
+}
+
+func NewCheckIsInRoomReq() *CheckIsInRoomReq {
+	return &CheckIsInRoomReq{}
+}
+
+func (p *CheckIsInRoomReq) InitDefault() {
+	*p = CheckIsInRoomReq{}
+}
+
+func (p *CheckIsInRoomReq) GetRoomId() (v string) {
+	return p.RoomId
+}
+
+func (p *CheckIsInRoomReq) GetClientId() (v string) {
+	return p.ClientId
+}
+func (p *CheckIsInRoomReq) SetRoomId(val string) {
+	p.RoomId = val
+}
+func (p *CheckIsInRoomReq) SetClientId(val string) {
+	p.ClientId = val
+}
+
+var fieldIDToName_CheckIsInRoomReq = map[int16]string{
+	1: "roomId",
+	2: "clientId",
+}
+
+func (p *CheckIsInRoomReq) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetRoomId bool = false
+	var issetClientId bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetRoomId = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetClientId = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetRoomId {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetClientId {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_CheckIsInRoomReq[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CheckIsInRoomReq[fieldId]))
+}
+
+func (p *CheckIsInRoomReq) ReadField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.RoomId = v
+	}
+	return nil
+}
+
+func (p *CheckIsInRoomReq) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ClientId = v
+	}
+	return nil
+}
+
+func (p *CheckIsInRoomReq) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("CheckIsInRoomReq"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *CheckIsInRoomReq) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("roomId", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.RoomId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *CheckIsInRoomReq) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("clientId", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ClientId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *CheckIsInRoomReq) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CheckIsInRoomReq(%+v)", *p)
+}
+
+func (p *CheckIsInRoomReq) DeepEqual(ano *CheckIsInRoomReq) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.RoomId) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.ClientId) {
+		return false
+	}
+	return true
+}
+
+func (p *CheckIsInRoomReq) Field1DeepEqual(src string) bool {
+
+	if strings.Compare(p.RoomId, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *CheckIsInRoomReq) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.ClientId, src) != 0 {
+		return false
+	}
+	return true
+}
+
+type CheckIsInRoomResp struct {
+	BaseResp *base.BaseResp `thrift:"baseResp,1,required" frugal:"1,required,base.BaseResp" json:"baseResp"`
+	IsInRoom *bool          `thrift:"isInRoom,2,optional" frugal:"2,optional,bool" json:"isInRoom,omitempty"`
+}
+
+func NewCheckIsInRoomResp() *CheckIsInRoomResp {
+	return &CheckIsInRoomResp{}
+}
+
+func (p *CheckIsInRoomResp) InitDefault() {
+	*p = CheckIsInRoomResp{}
+}
+
+var CheckIsInRoomResp_BaseResp_DEFAULT *base.BaseResp
+
+func (p *CheckIsInRoomResp) GetBaseResp() (v *base.BaseResp) {
+	if !p.IsSetBaseResp() {
+		return CheckIsInRoomResp_BaseResp_DEFAULT
+	}
+	return p.BaseResp
+}
+
+var CheckIsInRoomResp_IsInRoom_DEFAULT bool
+
+func (p *CheckIsInRoomResp) GetIsInRoom() (v bool) {
+	if !p.IsSetIsInRoom() {
+		return CheckIsInRoomResp_IsInRoom_DEFAULT
+	}
+	return *p.IsInRoom
+}
+func (p *CheckIsInRoomResp) SetBaseResp(val *base.BaseResp) {
+	p.BaseResp = val
+}
+func (p *CheckIsInRoomResp) SetIsInRoom(val *bool) {
+	p.IsInRoom = val
+}
+
+var fieldIDToName_CheckIsInRoomResp = map[int16]string{
+	1: "baseResp",
+	2: "isInRoom",
+}
+
+func (p *CheckIsInRoomResp) IsSetBaseResp() bool {
+	return p.BaseResp != nil
+}
+
+func (p *CheckIsInRoomResp) IsSetIsInRoom() bool {
+	return p.IsInRoom != nil
+}
+
+func (p *CheckIsInRoomResp) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+	var issetBaseResp bool = false
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetBaseResp = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	if !issetBaseResp {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_CheckIsInRoomResp[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_CheckIsInRoomResp[fieldId]))
+}
+
+func (p *CheckIsInRoomResp) ReadField1(iprot thrift.TProtocol) error {
+	p.BaseResp = base.NewBaseResp()
+	if err := p.BaseResp.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *CheckIsInRoomResp) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		p.IsInRoom = &v
+	}
+	return nil
+}
+
+func (p *CheckIsInRoomResp) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("CheckIsInRoomResp"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *CheckIsInRoomResp) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("baseResp", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.BaseResp.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *CheckIsInRoomResp) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetIsInRoom() {
+		if err = oprot.WriteFieldBegin("isInRoom", thrift.BOOL, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteBool(*p.IsInRoom); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *CheckIsInRoomResp) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("CheckIsInRoomResp(%+v)", *p)
+}
+
+func (p *CheckIsInRoomResp) DeepEqual(ano *CheckIsInRoomResp) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.BaseResp) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.IsInRoom) {
+		return false
+	}
+	return true
+}
+
+func (p *CheckIsInRoomResp) Field1DeepEqual(src *base.BaseResp) bool {
+
+	if !p.BaseResp.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+func (p *CheckIsInRoomResp) Field2DeepEqual(src *bool) bool {
+
+	if p.IsInRoom == src {
+		return true
+	} else if p.IsInRoom == nil || src == nil {
+		return false
+	}
+	if *p.IsInRoom != *src {
+		return false
+	}
+	return true
+}
+
 type RoomService interface {
 	CreateRoom(ctx context.Context) (r *CreateRoomResp, err error)
 
 	JoinRoom(ctx context.Context, req *JoinRoomReq) (r *JoinRoomResp, err error)
 
 	GetRoomMembers(ctx context.Context, req *GetRoomMembersReq) (r *GetRoomMembersResp, err error)
+
+	CheckIsInRoom(ctx context.Context, req *CheckIsInRoomReq) (r *CheckIsInRoomResp, err error)
 }
 
 type RoomServiceClient struct {
@@ -1426,6 +1921,15 @@ func (p *RoomServiceClient) GetRoomMembers(ctx context.Context, req *GetRoomMemb
 	}
 	return _result.GetSuccess(), nil
 }
+func (p *RoomServiceClient) CheckIsInRoom(ctx context.Context, req *CheckIsInRoomReq) (r *CheckIsInRoomResp, err error) {
+	var _args RoomServiceCheckIsInRoomArgs
+	_args.Req = req
+	var _result RoomServiceCheckIsInRoomResult
+	if err = p.Client_().Call(ctx, "CheckIsInRoom", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
 
 type RoomServiceProcessor struct {
 	processorMap map[string]thrift.TProcessorFunction
@@ -1450,6 +1954,7 @@ func NewRoomServiceProcessor(handler RoomService) *RoomServiceProcessor {
 	self.AddToProcessorMap("CreateRoom", &roomServiceProcessorCreateRoom{handler: handler})
 	self.AddToProcessorMap("JoinRoom", &roomServiceProcessorJoinRoom{handler: handler})
 	self.AddToProcessorMap("GetRoomMembers", &roomServiceProcessorGetRoomMembers{handler: handler})
+	self.AddToProcessorMap("CheckIsInRoom", &roomServiceProcessorCheckIsInRoom{handler: handler})
 	return self
 }
 func (p *RoomServiceProcessor) Process(ctx context.Context, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -1597,6 +2102,54 @@ func (p *roomServiceProcessorGetRoomMembers) Process(ctx context.Context, seqId 
 		result.Success = retval
 	}
 	if err2 = oprot.WriteMessageBegin("GetRoomMembers", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(ctx); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type roomServiceProcessorCheckIsInRoom struct {
+	handler RoomService
+}
+
+func (p *roomServiceProcessorCheckIsInRoom) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := RoomServiceCheckIsInRoomArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("CheckIsInRoom", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	var err2 error
+	result := RoomServiceCheckIsInRoomResult{}
+	var retval *CheckIsInRoomResp
+	if retval, err2 = p.handler.CheckIsInRoom(ctx, args.Req); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing CheckIsInRoom: "+err2.Error())
+		oprot.WriteMessageBegin("CheckIsInRoom", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return true, err2
+	} else {
+		result.Success = retval
+	}
+	if err2 = oprot.WriteMessageBegin("CheckIsInRoom", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -2567,6 +3120,352 @@ func (p *RoomServiceGetRoomMembersResult) DeepEqual(ano *RoomServiceGetRoomMembe
 }
 
 func (p *RoomServiceGetRoomMembersResult) Field0DeepEqual(src *GetRoomMembersResp) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type RoomServiceCheckIsInRoomArgs struct {
+	Req *CheckIsInRoomReq `thrift:"req,1" frugal:"1,default,CheckIsInRoomReq" json:"req"`
+}
+
+func NewRoomServiceCheckIsInRoomArgs() *RoomServiceCheckIsInRoomArgs {
+	return &RoomServiceCheckIsInRoomArgs{}
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) InitDefault() {
+	*p = RoomServiceCheckIsInRoomArgs{}
+}
+
+var RoomServiceCheckIsInRoomArgs_Req_DEFAULT *CheckIsInRoomReq
+
+func (p *RoomServiceCheckIsInRoomArgs) GetReq() (v *CheckIsInRoomReq) {
+	if !p.IsSetReq() {
+		return RoomServiceCheckIsInRoomArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *RoomServiceCheckIsInRoomArgs) SetReq(val *CheckIsInRoomReq) {
+	p.Req = val
+}
+
+var fieldIDToName_RoomServiceCheckIsInRoomArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_RoomServiceCheckIsInRoomArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) ReadField1(iprot thrift.TProtocol) error {
+	p.Req = NewCheckIsInRoomReq()
+	if err := p.Req.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("CheckIsInRoom_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("RoomServiceCheckIsInRoomArgs(%+v)", *p)
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) DeepEqual(ano *RoomServiceCheckIsInRoomArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *RoomServiceCheckIsInRoomArgs) Field1DeepEqual(src *CheckIsInRoomReq) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type RoomServiceCheckIsInRoomResult struct {
+	Success *CheckIsInRoomResp `thrift:"success,0,optional" frugal:"0,optional,CheckIsInRoomResp" json:"success,omitempty"`
+}
+
+func NewRoomServiceCheckIsInRoomResult() *RoomServiceCheckIsInRoomResult {
+	return &RoomServiceCheckIsInRoomResult{}
+}
+
+func (p *RoomServiceCheckIsInRoomResult) InitDefault() {
+	*p = RoomServiceCheckIsInRoomResult{}
+}
+
+var RoomServiceCheckIsInRoomResult_Success_DEFAULT *CheckIsInRoomResp
+
+func (p *RoomServiceCheckIsInRoomResult) GetSuccess() (v *CheckIsInRoomResp) {
+	if !p.IsSetSuccess() {
+		return RoomServiceCheckIsInRoomResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *RoomServiceCheckIsInRoomResult) SetSuccess(x interface{}) {
+	p.Success = x.(*CheckIsInRoomResp)
+}
+
+var fieldIDToName_RoomServiceCheckIsInRoomResult = map[int16]string{
+	0: "success",
+}
+
+func (p *RoomServiceCheckIsInRoomResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *RoomServiceCheckIsInRoomResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_RoomServiceCheckIsInRoomResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomResult) ReadField0(iprot thrift.TProtocol) error {
+	p.Success = NewCheckIsInRoomResp()
+	if err := p.Success.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *RoomServiceCheckIsInRoomResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("CheckIsInRoom_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *RoomServiceCheckIsInRoomResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("RoomServiceCheckIsInRoomResult(%+v)", *p)
+}
+
+func (p *RoomServiceCheckIsInRoomResult) DeepEqual(ano *RoomServiceCheckIsInRoomResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *RoomServiceCheckIsInRoomResult) Field0DeepEqual(src *CheckIsInRoomResp) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

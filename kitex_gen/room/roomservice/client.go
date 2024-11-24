@@ -14,6 +14,7 @@ type Client interface {
 	CreateRoom(ctx context.Context, callOptions ...callopt.Option) (r *room.CreateRoomResp, err error)
 	JoinRoom(ctx context.Context, req *room.JoinRoomReq, callOptions ...callopt.Option) (r *room.JoinRoomResp, err error)
 	GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq, callOptions ...callopt.Option) (r *room.GetRoomMembersResp, err error)
+	CheckIsInRoom(ctx context.Context, req *room.CheckIsInRoomReq, callOptions ...callopt.Option) (r *room.CheckIsInRoomResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -58,4 +59,9 @@ func (p *kRoomServiceClient) JoinRoom(ctx context.Context, req *room.JoinRoomReq
 func (p *kRoomServiceClient) GetRoomMembers(ctx context.Context, req *room.GetRoomMembersReq, callOptions ...callopt.Option) (r *room.GetRoomMembersResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetRoomMembers(ctx, req)
+}
+
+func (p *kRoomServiceClient) CheckIsInRoom(ctx context.Context, req *room.CheckIsInRoomReq, callOptions ...callopt.Option) (r *room.CheckIsInRoomResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CheckIsInRoom(ctx, req)
 }

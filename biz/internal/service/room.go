@@ -146,3 +146,16 @@ func (s *RoomService) GetRoomMembers(ctx context.Context, req *room.GetRoomMembe
 	}
 	return resp, nil
 }
+
+func (s *RoomService) CheckIsInRoom(ctx context.Context, req *room.CheckIsInRoomReq) (resp *room.CheckIsInRoomResp, err error) {
+	isInRoom, err := s.Repo.CheckIsInRoom(req.RoomId, req.ClientId)
+	if err != nil {
+		return nil, err
+	}
+	return &room.CheckIsInRoomResp{
+		BaseResp: &base.BaseResp{
+			Code: 0,
+		},
+		IsInRoom: &isInRoom,
+	}, nil
+}

@@ -69,3 +69,15 @@ func (r *Repository) GetRoomMembers(roomId string) ([]string, error) {
 
 	return members, nil
 }
+
+func (r *Repository) CheckIsInRoom(roomId string, clientId string) (bool, error) {
+	roomKey := "room:" + roomId + ":users"
+	ctx := context.Background()
+
+	isMember, err := r.Cache.SIsMember(ctx, roomKey, clientId).Result()
+	if err != nil {
+		return false, err
+	}
+
+	return isMember, nil
+}

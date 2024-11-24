@@ -24,8 +24,19 @@ struct GetRoomMembersResp{
     1: required base.BaseResp baseResp
     2: optional list<string> members
 }
+struct CheckIsInRoomReq{
+    1: required string roomId
+    2: required string clientId
+}
+struct CheckIsInRoomResp{
+    1: required base.BaseResp baseResp
+    2: optional bool isInRoom
+}
+
+
 service RoomService {
     CreateRoomResp CreateRoom()
     JoinRoomResp JoinRoom(JoinRoomReq req)
     GetRoomMembersResp GetRoomMembers(GetRoomMembersReq req)
+    CheckIsInRoomResp CheckIsInRoom(CheckIsInRoomReq req)
 }

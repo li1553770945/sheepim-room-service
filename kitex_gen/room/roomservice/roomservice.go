@@ -22,6 +22,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"CreateRoom":     kitex.NewMethodInfo(createRoomHandler, newRoomServiceCreateRoomArgs, newRoomServiceCreateRoomResult, false),
 		"JoinRoom":       kitex.NewMethodInfo(joinRoomHandler, newRoomServiceJoinRoomArgs, newRoomServiceJoinRoomResult, false),
 		"GetRoomMembers": kitex.NewMethodInfo(getRoomMembersHandler, newRoomServiceGetRoomMembersArgs, newRoomServiceGetRoomMembersResult, false),
+		"CheckIsInRoom":  kitex.NewMethodInfo(checkIsInRoomHandler, newRoomServiceCheckIsInRoomArgs, newRoomServiceCheckIsInRoomResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "room",
@@ -92,6 +93,24 @@ func newRoomServiceGetRoomMembersResult() interface{} {
 	return room.NewRoomServiceGetRoomMembersResult()
 }
 
+func checkIsInRoomHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*room.RoomServiceCheckIsInRoomArgs)
+	realResult := result.(*room.RoomServiceCheckIsInRoomResult)
+	success, err := handler.(room.RoomService).CheckIsInRoom(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newRoomServiceCheckIsInRoomArgs() interface{} {
+	return room.NewRoomServiceCheckIsInRoomArgs()
+}
+
+func newRoomServiceCheckIsInRoomResult() interface{} {
+	return room.NewRoomServiceCheckIsInRoomResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -126,6 +145,16 @@ func (p *kClient) GetRoomMembers(ctx context.Context, req *room.GetRoomMembersRe
 	_args.Req = req
 	var _result room.RoomServiceGetRoomMembersResult
 	if err = p.c.Call(ctx, "GetRoomMembers", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CheckIsInRoom(ctx context.Context, req *room.CheckIsInRoomReq) (r *room.CheckIsInRoomResp, err error) {
+	var _args room.RoomServiceCheckIsInRoomArgs
+	_args.Req = req
+	var _result room.RoomServiceCheckIsInRoomResult
+	if err = p.c.Call(ctx, "CheckIsInRoom", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

@@ -29,3 +29,10 @@ func (s *RoomServiceImpl) GetRoomMembers(ctx context.Context, req *room.GetRoomM
 	resp, err = App.RoomService.GetRoomMembers(ctx, req)
 	return
 }
+
+// CheckIsInRoom implements the RoomServiceImpl interface.
+func (s *RoomServiceImpl) CheckIsInRoom(ctx context.Context, req *room.CheckIsInRoomReq) (resp *room.CheckIsInRoomResp, err error) {
+	App := container.GetGlobalContainer()
+	resp, err = App.RoomService.CheckIsInRoom(ctx, req)
+	return
+}
