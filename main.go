@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
@@ -31,6 +32,14 @@ import (
 	"time"
 )
 
+const (
+	MaxRetryTimes  = 3
+	ObserveDelay   = 20 * time.Second
+	RetryDelay     = 5 * time.Second
+	MaxConnections = 500
+	MaxQps         = 100
+)
+
 func main() {
 	env := os.Getenv("ENV")
 	if env == "" {
@@ -42,6 +51,8 @@ func main() {
 	serviceName := App.Config.ServerConfig.ServiceName
 
 	defer func(p provider.OtelProvider, ctx context.Context) {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // 5 秒超时
+		defer cancel()
 		err := p.Shutdown(ctx)
 		if err != nil {
 			klog.Fatalf("server stopped with error:%s", err)
@@ -54,9 +65,9 @@ func main() {
 	}
 
 	retryConfig := retry.NewRetryConfig(
-		retry.WithMaxAttemptTimes(0),
-		retry.WithObserveDelay(20*time.Second),
-		retry.WithRetryDelay(5*time.Second),
+		retry.WithMaxAttemptTimes(MaxRetryTimes),
+		retry.WithObserveDelay(ObserveDelay),
+		retry.WithRetryDelay(RetryDelay),
 	)
 	r, err := etcd.NewEtcdRegistryWithRetry(App.Config.EtcdConfig.Endpoint, retryConfig) // r should not be reused.
 	if err != nil {
@@ -68,8 +79,13 @@ func main() {
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: serviceName}),
 		server.WithRegistry(r),
 		server.WithServiceAddr(addr),
+		// 新增限制：最大并发连接，最大 QPS
+		server.WithLimit(&limit.Option{
+			MaxConnections: MaxConnections, // 防止瞬时流量拖垮服务
+			MaxQPS:         MaxQps,         // 防止单个服务过载
+		}),
 	)
 	if err := svr.Run(); err != nil {
-		klog.Fatalf("服务启动失败:", err)
+		klog.Fatalf("服务启动失败:%v", err)
 	}
 }
